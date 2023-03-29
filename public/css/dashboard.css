@@ -1,0 +1,387 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Poppins !important;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 99px;
+  background-color: #2e3047;
+  cursor: pointer;
+}
+
+.hamburger {
+  position: relative;
+  top: calc(50% - 2px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+}
+
+.hamburger > span,
+.hamburger > span::before,
+.hamburger > span::after {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  border-radius: 99px;
+  background-color: #fff;
+  transition-duration: 0.25s;
+}
+
+.hamburger > span::before {
+  content: "";
+  top: -8px;
+}
+.hamburger > span::after {
+  content: "";
+  top: 8px;
+}
+.menu-toggle.is-active .hamburger > span {
+  transform: rotate(45deg);
+}
+.menu-toggle.is-active .hamburger > span::before {
+  top: 0;
+  transform: rotate(0deg);
+}
+.menu-toggle.is-active .hamburger > span::after {
+  top: 0;
+  transform: rotate(90deg);
+}
+
+.sidebar {
+  flex: 1 1 0;
+  max-width: 300px;
+  padding: 2rem 1rem;
+  border-right: 1px solid rgba(0, 0, 0, 0.14);
+}
+
+.sidebar > .sidebar-logo-brand {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.sidebar > .sidebar-menu-container {
+  margin-top: 122px;
+  margin-left: 20px;
+}
+
+.sidebar h3 {
+  color: #707793;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5em;
+}
+
+.sidebar .menu {
+  margin: 0 -1rem;
+}
+
+.sidebar .menu .menu-item {
+  display: block;
+  padding: 1em;
+  color: black;
+  text-decoration: none;
+  transition: 0.2s linear;
+}
+
+.sidebar .menu .menu-item:hover,
+.sidebar .menu .menu-item.is-active {
+  color: #3bba9c;
+  border-right: 5px solid #3bba9c;
+}
+
+.sidebar .menu .menu-item:hover {
+  border-right: 5px solid #3bba9c;
+}
+
+.content {
+  display: flex;
+  flex: 1 1 0;
+  padding-top: 0 !important;
+  padding: 2rem;
+}
+
+.content h1 {
+  color: #3c3f58;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.content p {
+  color: #707793;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  .content {
+    padding-top: 8rem;
+  }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    height: 100vh;
+    width: 100%;
+    max-width: 300px;
+    transition: 0.2s linear;
+  }
+
+  .sidebar.is-active {
+    left: 0;
+  }
+}
+
+/* middle container */
+.middle-container {
+  flex: 3;
+  padding-right: 15px;
+  padding-top: 2rem;
+  border-right: 1px solid rgba(0, 0, 0, 0.14);
+}
+
+.date-button {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+#myChart {
+  height: 250px !important;
+  width: 250px !important;
+  margin: auto;
+}
+
+.daily-usage {
+  background: rgb(217, 217, 217, 0.33);
+  padding: 40px;
+  border-radius: 45px;
+}
+
+#myChart1 {
+  height: 280px !important;
+  width: 450px !important;
+  margin: auto;
+}
+
+.monthly-usage {
+  background: rgb(217, 217, 217, 0.33);
+  padding: 40px;
+  border-radius: 45px;
+  margin-top: 20px;
+}
+
+/* right container */
+.right-container {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  padding-left: 15px;
+}
+
+.right-container > div > h4 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.update-box {
+  background: rgba(217, 217, 217, 0.497);
+  display: flex;
+  padding: 20px;
+  border-radius: 25px;
+}
+
+.daily-container,
+.monthly-container {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+}
+
+.daily-container > div,
+.monthly-container > div {
+  display: flex;
+  justify-content: space-evenly;
+}
+.material-symbols-outlined {
+  font-size: 15px !important;
+  color: black;
+}
+.material-symbols-outlined:hover {
+  cursor: pointer;
+}
+.max-daily,
+.max-monthly,
+.dailyCalc,
+.monthCalc {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+/* popup */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;
+  width: 500px;
+  text-align: center;
+}
+
+#close-popup-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* popup */
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 5px;
+  background-color: #eee;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+form {
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  margin: 10px;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+input[type="submit"] {
+  display: block;
+  margin-top: 10px;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#usage-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* popupMax */
+.popupMax {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.popupMax .popup-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  max-width: 700px;
+}
+
+.popupMax .popup-content h2 {
+  margin-top: 0;
+}
+
+.popupMax .popup-content label {
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+.popupMax .popup-content input[type="number"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.popupMax .popup-content input[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.popupMax .popup-content input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.popupMax .close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.popupMax .close:hover,
+.popupMax .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
