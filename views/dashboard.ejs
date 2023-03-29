@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AQUATRACK</title>
+    <link rel="icon" type="image/png" href="/images/droplet.png" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <div class="menu-toggle">
+        <div class="hamburger">
+          <span></span>
+        </div>
+      </div>
+
+      <aside class="sidebar">
+        <div class="sidebar-logo-brand">
+          <img src="/images/logo.webp" alt="logo" width="50px" />
+          <p>AQUATRACK</p>
+        </div>
+
+        <div class="sidebar-menu-container">
+          <h3>Menu</h3>
+
+          <nav class="menu">
+            <a href="/" class="menu-item">Home</a>
+            <a href="#" class="menu-item is-active">Dashboard</a>
+            <a href="/api/auth/logout" class="menu-item">Logout</a>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="middle-container">
+          <h1>Welcome, <%= existingUser.name %></h1>
+          <div class="date-button">
+            <p id="header-date"></p>
+            <!-- popup -->
+            <button id="open-popup-btn">Add Daily Usage</button>
+          </div>
+
+          <div id="popup" class="popup">
+            <div class="popup-content">
+              <button id="close-popup-btn">X</button>
+              <div>
+                <h2>Enter today's usage</h2>
+                <div>
+                  <ul id="tag-list">
+                    <li data-tag="shower">Shower</li>
+                    <li data-tag="toilet">Toilet</li>
+                    <li data-tag="sink">Sink</li>
+                  </ul>
+                  <div>
+                    <label for="new-tag">Add Tag:</label>
+                    <input type="text" id="new-tag" name="new-tag" />
+                    <button id="add-tag">Add</button>
+                  </div>
+                </div>
+                <form
+                  id="usage-form"
+                  action="/api/usage/water/<%= userId %>"
+                  method="POST"
+                >
+                  <h3>Usage</h3>
+                  <input type="submit" value="Done" />
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="daily-usage">
+            <h4>Daily usage</h4>
+            <canvas id="myChart" width="40px" height="40px"></canvas>
+            <!-- <button onclick="updateChart()">Update Chart</button> -->
+          </div>
+          <div class="monthly-usage">
+            <h4>Monthly usage</h4>
+            <canvas id="myChart1"></canvas>
+          </div>
+        </div>
+        <div class="right-container">
+          <div>
+            <h4>Max limit:</h4>
+            <div class="update-box">
+              <div class="daily-container">
+                <div>
+                  <h6>DAILY</h6>
+                </div>
+                <p class="max-daily"></p>
+              </div>
+              <div class="monthly-container">
+                <div>
+                  <h6>MONTHLY</h6>
+                  <span class="material-symbols-outlined edit-max-usage-btn">
+                    edit
+                  </span>
+                </div>
+                <p class="max-monthly"></p>
+              </div>
+            </div>
+          </div>
+          <div class="popupMax">
+            <div class="popup-content">
+              <span class="close">&times;</span>
+              <h2>Update Max Usage</h2>
+              <form action="/api/usage/maxUsage/<%= userId %>" method="POST">
+                <label for="maxDaily">Max Daily:</label>
+                <input type="number" id="maxDaily" name="maxDaily" />
+                <label for="maxMonthly">Max Monthly:</label>
+                <input type="number" id="maxMonthly" name="maxMonthly" />
+                <input type="submit" value="Submit" />
+              </form>
+            </div>
+          </div>
+          <div>
+            <h4>Total usage for this month:</h4>
+            <div class="update-box">
+              <div class="daily-container">
+                <div>
+                  <h6>TODAY</h6>
+                </div>
+                <p class="dailyCalc"></p>
+              </div>
+              <div class="monthly-container">
+                <div>
+                  <h6>MONTH</h6>
+                </div>
+                <p class="monthCalc"></p>
+              </div>
+            </div>
+          </div>
+          <div></div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const userId = "<%= userId %>";
+      console.log(userId);
+      const tagList = document.getElementById("tag-list");
+      const usageForm = document.getElementById("usage-form");
+      const newTagInput = document.getElementById("new-tag");
+      const addTagButton = document.getElementById("add-tag");
+
+      // Add event listeners to each tag in the tag list
+      tagList.querySelectorAll("li").forEach((tag) => {
+        tag.addEventListener("click", () => {
+          // Create a new label for the tag and add it to the form
+          const label = document.createElement("label");
+          label.textContent = tag.dataset.tag + ":";
+          label.setAttribute("for", tag.dataset.tag);
+          usageForm.appendChild(label);
+
+          // Create a new input field for the tag and add it to the form
+          const input = document.createElement("input");
+          input.setAttribute("type", "number");
+          input.setAttribute("id", tag.dataset.tag);
+          input.setAttribute("name", tag.dataset.tag);
+          usageForm.appendChild(input);
+        });
+      });
+
+      // Add event listener to the "Add Tag" button
+      addTagButton.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        // Get the name of the new tag from the input field
+        const tagName = newTagInput.value.trim();
+
+        // Only create the new tag if the user entered a valid name
+        if (tagName !== null) {
+          // Create a new tag with the user-provided name
+          const newTag = document.createElement("li");
+          newTag.dataset.tag = tagName;
+          newTag.textContent = tagName;
+
+          console.log("taglist: ", tagList);
+          // Add the new tag to the tag list and add an event listener to it
+          tagList.appendChild(newTag);
+          newTag.addEventListener("click", () => {
+            // Create a new label for the tag and add it to the form
+            const label = document.createElement("label");
+            label.textContent = newTag.dataset.tag + ":";
+            label.setAttribute("for", newTag.dataset.tag);
+            usageForm.appendChild(label);
+
+            // Create a new input field for the tag and add it to the form
+            const input = document.createElement("input");
+            input.setAttribute("type", "number");
+            input.setAttribute("id", newTag.dataset.tag);
+            input.setAttribute("name", newTag.dataset.tag);
+            usageForm.appendChild(input);
+          });
+
+          // Clear the input field
+          newTagInput.value = "";
+        }
+      });
+    </script>
+    <script src="/js/dashboard.js"></script>
+  </body>
+</html>
